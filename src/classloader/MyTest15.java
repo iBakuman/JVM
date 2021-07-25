@@ -28,19 +28,19 @@ public class MyTest15 extends ClassLoader {
     }
 
     @Override
-    protected Class<?> findClass(String name) throws ClassNotFoundException {
+    protected Class<?> findClass(String className) throws ClassNotFoundException {
         // 该方法在loadClass中被调用
-        byte[] data = this.loadClassData(name);
-        return this.defineClass(name, data, 0, data.length);
+        byte[] data = this.loadClassData(className);
+        return this.defineClass(className, data, 0, data.length);
     }
 
-    private byte[] loadClassData(String name) {
+    private byte[] loadClassData(String className) {
         InputStream is = null;
         byte[] data = null;
         ByteArrayOutputStream baos = null;
         try {
             this.classloaderName = this.classloaderName.replace(".", System.getProperty("file.separator"));
-            is = new FileInputStream(new File(name + this.fileExtension));
+            is = new FileInputStream(new File(className + this.fileExtension));
             baos = new ByteArrayOutputStream();
 
             int ch = 0;
