@@ -9,6 +9,7 @@ import java.io.InputStream;
 public class MyTest15 extends ClassLoader {
     private String classloaderName;
     private final String fileExtension = ".class";
+    private String path;
 
     public MyTest15(String classloaderName) {
         super();// Creates a new class loader using the ClassLoader returned by the method getSystemClassLoader() as the parent class loader.
@@ -20,6 +21,10 @@ public class MyTest15 extends ClassLoader {
         this.classloaderName = classloaderName;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     @Override
     public String toString() {
         return "MyTest15{" +
@@ -29,6 +34,8 @@ public class MyTest15 extends ClassLoader {
 
     @Override
     protected Class<?> findClass(String className) throws ClassNotFoundException {
+        System.out.println("findClass invoked: " + classloaderName);
+        System.out.println("class loader name: " + this.classloaderName);
         // 该方法在loadClass中被调用
         byte[] data = this.loadClassData(className);
         return this.defineClass(className, data, 0, data.length);
@@ -40,12 +47,12 @@ public class MyTest15 extends ClassLoader {
         ByteArrayOutputStream baos = null;
         try {
             this.classloaderName = this.classloaderName.replace(".", System.getProperty("file.separator"));
-            is = new FileInputStream(new File(className + this.fileExtension));
+            is = new FileInputStream(new File(path + className + this.fileExtension));
             baos = new ByteArrayOutputStream();
 
             int ch = 0;
 
-            while(-1 != (ch = is.read())){
+            while (-1 != (ch = is.read())) {
                 baos.write(ch);
             }
             data = baos.toByteArray();
@@ -63,13 +70,27 @@ public class MyTest15 extends ClassLoader {
     }
 
     public static void test(ClassLoader classLoader) throws Exception {
+        /*
+            Loads the class with the specified binary name. The default implementation of this method searches for classes in the following order:
+                1.Invoke findLoadedClass(String) to check if the class has already been loaded.
+                2.Invoke the loadClass method on the parent class loader. If the parent is null the class loader built-in to the virtual machine is used, instead.
+                3/Invoke the findClass(String) method to find the class.
+         */
         Class<?> clazz = classLoader.loadClass("classloader.MyTest1");
+        System.out.println("class: " + clazz.hashCode());
         Object obj = clazz.newInstance();
         System.out.println(obj);
+        System.out.println();
     }
 
     public static void main(String[] args) throws Exception {
+        // loader1和loader2加载同一个类，且当前类都在类路径。
         MyTest15 loader1 = new MyTest15("loader1");
+        loader1.setPath("F:\\Project\\Java\\JVM\\src\\");
         test(loader1);
+
+        MyTest15 loader2 = new MyTest15("loader2");
+        loader2.setPath("F:\\Project\\Java\\JVM\\src\\");
+        test(loader2);
     }
 }
