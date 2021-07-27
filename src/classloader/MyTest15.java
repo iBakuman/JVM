@@ -107,5 +107,9 @@ public class MyTest15 extends ClassLoader {
         MyTest15 loader2 = new MyTest15(loader1,"loader2");
         loader2.setPath("F:\\Project\\Java\\JVM\\test\\");
         test(loader2);
+
+        MyTest15 loader3 = new MyTest15("loader3");
+        loader3.setPath("F:\\Project\\Java\\JVM\\test\\");
+        test(loader3);
     }
 }
