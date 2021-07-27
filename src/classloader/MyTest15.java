@@ -87,29 +87,33 @@ public class MyTest15 extends ClassLoader {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("classpath: " + MyTest15.class.getResource("").toString() );
-        /*
-            // loader1和loader2加载同一个类，且当前类都在类路径。
-            MyTest15 loader1 = new MyTest15("loader1");
-            loader1.setPath("F:\\Project\\Java\\JVM\\src\\");
-            test(loader1);
-
-            MyTest15 loader2 = new MyTest15("loader2");
-            loader2.setPath("F:\\Project\\Java\\JVM\\src\\");
-            test(loader2);
-         */
+        System.out.println("classpath: " + MyTest15.class.getResource("").toString());
 
         // loader1和loader2加载同一个类，且当前类不在类路径。
+        String classPath = "F:\\Project\\Java\\JVM\\test\\";
         MyTest15 loader1 = new MyTest15("loader1");
-        loader1.setPath("F:\\Project\\Java\\JVM\\test\\");
-        test(loader1);
+        loader1.setPath(classPath);
+        Class<?> clazz = loader1.loadClass("classloader.MyTest1");
+        System.out.println("class: " + clazz.hashCode());
+        Object obj = clazz.newInstance();
+        System.out.println(obj);
+        System.out.println();
 
-        MyTest15 loader2 = new MyTest15(loader1,"loader2");
-        loader2.setPath("F:\\Project\\Java\\JVM\\test\\");
-        test(loader2);
+        loader1 = null;
+        clazz = null;
+        obj = null;
 
-        MyTest15 loader3 = new MyTest15("loader3");
-        loader3.setPath("F:\\Project\\Java\\JVM\\test\\");
-        test(loader3);
+        System.gc();
+
+        // 演示类的卸载，需要加上虚拟机参数-XX:+TraceClassUnloading
+        System.out.println("--------------------------");
+        Thread.sleep(100000);
+        loader1 = new MyTest15("loader1");
+        loader1.setPath(classPath);
+        clazz = loader1.loadClass("classloader.MyTest1");
+        System.out.println("class: " + clazz.hashCode());
+        obj = clazz.newInstance();
+        System.out.println(obj);
+        System.out.println();
     }
 }
