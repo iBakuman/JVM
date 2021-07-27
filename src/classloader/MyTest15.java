@@ -42,6 +42,7 @@ public class MyTest15 extends ClassLoader {
         return this.defineClass(className, data, 0, data.length);
     }
 
+    // loadClassData不是重载的方法
     private byte[] loadClassData(String className) {
         InputStream is = null;
         byte[] data = null;
@@ -103,7 +104,7 @@ public class MyTest15 extends ClassLoader {
         loader1.setPath("F:\\Project\\Java\\JVM\\test\\");
         test(loader1);
 
-        MyTest15 loader2 = new MyTest15("loader2");
+        MyTest15 loader2 = new MyTest15(loader1,"loader2");
         loader2.setPath("F:\\Project\\Java\\JVM\\test\\");
         test(loader2);
     }
