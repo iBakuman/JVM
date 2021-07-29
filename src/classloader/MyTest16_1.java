@@ -1,6 +1,15 @@
 package classloader;
 
-// 注意：加载MySample.class与MyCat.class的是同一个类加载器的实例
+/*
+    MySample由自定义类加载器加载，MyCat是由系统类加载器加载的
+    在MyCat类中访问MySample.class是不行的，MySample所处的命名空间
+    包含MyCat所处的命名空间，MySample中可以访问MyCat.class，但是
+    MyCat中不可以访问MySample.class
+
+    命名空间重要说明
+        1.子加载器所加载的类能够访问父加载器所加载的类
+        2.父加载器所加载的类无法访问子加载器所加载的类
+ */
 public class MyTest16_1 {
     public static void main(String[] args) throws Exception{
         MyTest15 loader1 = new MyTest15("loader1");
